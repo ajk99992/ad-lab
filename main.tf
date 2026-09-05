@@ -32,6 +32,24 @@ resource "azurerm_subnet" "servers" {
   address_prefixes     = ["10.10.1.0/24"]
 }
 
+resource "azurerm_public_ip" "dc01" {
+  name                = "pip-dc01"
+  location            = azurerm_resource_group.adlab.location
+  resource_group_name = azurerm_resource_group.adlab.name
+
+  allocation_method = "Static"
+  sku               = "Standard"
+}
+
+resource "azurerm_public_ip" "app01" {
+  name                = "pip-app01"
+  location            = azurerm_resource_group.adlab.location
+  resource_group_name = azurerm_resource_group.adlab.name
+
+  allocation_method = "Static"
+  sku               = "Standard"
+}
+
 resource "azurerm_network_interface" "dc01" {
   name                = "nic-dc01"
   location            = azurerm_resource_group.adlab.location
@@ -41,6 +59,7 @@ resource "azurerm_network_interface" "dc01" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.servers.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.dc01.id
   }
 }
 
@@ -53,6 +72,7 @@ resource "azurerm_network_interface" "app01" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.servers.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.app01.id
   }
 }
 
