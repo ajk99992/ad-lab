@@ -3,4 +3,4 @@
 *.tfstate.*
 terraform.tfvars
 .terraform.lock.hcl
-crash.log
+crash.logg
