@@ -1,0 +1,46 @@
+---
+
+- name: Join APP01 to lab.local
+
+  hosts: app01
+
+  gather_facts: false
+
+
+  vars:
+
+    domain_name: lab.local
+
+    domain_admin_user: Labadmin@lab.local 
+
+    domain_admin_password: "xe#45dng"
+
+
+  tasks:
+
+    - name: Point APP01 DNS to DC01
+
+      ansible.windows.win_dns_client:
+
+        adapter_names: "*"
+
+        dns_servers:
+
+          - 10.10.1.4
+
+
+    - name: Join APP01 to the domain
+
+      microsoft.ad.membership:
+
+        dns_domain_name: "{{ domain_name }}"
+
+        hostname: APP01
+
+        domain_admin_user: "{{ domain_admin_user }}"
+
+        domain_admin_password: "{{ domain_admin_password }}"
+
+        state: domain
+
+        reboot: true
